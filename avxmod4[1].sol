@@ -6,9 +6,24 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 contract DegenToken is ERC20 {
     address public owner;
 
+    // Structure to represent a Prize
+    struct HemsPrize {
+        uint cost;
+        string name;
+    }
+
+    // Array to store the available prizes
+    HemsPrize[] public prizes;
+
     constructor(string memory name, string memory symbol, uint initialSupply) ERC20(name, symbol) {
         _mint(msg.sender, initialSupply);
         owner = msg.sender;
+        prizes.push(HemsPrize(1000, "XLR8")); // inspired by Alien name from Ben 10
+        prizes.push(HemsPrize(2000, "Heatblast")); // inspired by Alien name from Ben 10
+        prizes.push(HemsPrize(3000, "Four Arms")); // inspired  by Alien name from Ben 10
+        prizes.push(HemsPrize(5000, "Upgrade")); // inspired by Alien name from Ben 10
+        //if u want to add another prize 
+        //  prizes.push(HemsPrize([cost to redeem], [name]));
     }
 
     modifier onlyOwner() {
@@ -35,11 +50,15 @@ contract DegenToken is ERC20 {
         return true;
     }
 
-    function redeem(uint amount) public hasEnoughBalance(amount) returns (bool) {
-        require(balanceOf(msg.sender) - amount >= 100, "Redemption requires more than 100 points");
+    function redeem(uint pid) public hasEnoughBalance(prizes[pid].cost) returns (string memory) {
+        require(pid > 0 && pid < prizes.length, "Invalid prize selection");
+        uint cost = prizes[pid].cost;
+        require(cost > 0, "Invalid prize selection");
 
-        _burn(msg.sender, amount);
-        return true;
+        require(balanceOf(msg.sender) - cost >= 100, "Redemption requires surplus of 100 points");
+
+        _burn(msg.sender, cost);
+        return prizes[pid].name;
     }
 
     function burn(uint amount) public hasEnoughBalance(amount) {
