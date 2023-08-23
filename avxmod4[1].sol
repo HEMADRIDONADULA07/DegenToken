@@ -18,10 +18,10 @@ contract DegenToken is ERC20 {
     constructor(string memory name, string memory symbol, uint initialSupply) ERC20(name, symbol) {
         _mint(msg.sender, initialSupply);
         owner = msg.sender;
-        prizes.push(HemsPrize(1000, "XLR8")); // inspired by Alien name from Ben 10
-        prizes.push(HemsPrize(2000, "Heatblast")); // inspired by Alien name from Ben 10
-        prizes.push(HemsPrize(3000, "Four Arms")); // inspired  by Alien name from Ben 10
-        prizes.push(HemsPrize(5000, "Upgrade")); // inspired by Alien name from Ben 10
+        prizes.push(HemsPrize(1000, "XLR8")); // Alien name from Ben 10
+        prizes.push(HemsPrize(2000, "Heatblast")); // Alien name from Ben 10
+        prizes.push(HemsPrize(3000, "Four Arms")); // Alien name from Ben 10
+        prizes.push(HemsPrize(5000, "Upgrade")); // Alien name from Ben 10
         //if u want to add another prize 
         //  prizes.push(HemsPrize([cost to redeem], [name]));
     }
@@ -55,7 +55,7 @@ contract DegenToken is ERC20 {
         uint cost = prizes[pid].cost;
         require(cost > 0, "Invalid prize selection");
 
-        require(balanceOf(msg.sender) - cost >= 100, "Redemption requires surplus of 100 points");
+        require(balanceOf(msg.sender) - cost >= 100, "Redemption requires more than 100 points");
 
         _burn(msg.sender, cost);
         return prizes[pid].name;
